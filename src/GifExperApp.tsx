@@ -1,22 +1,36 @@
 import { useState } from 'react';
 import { AddCategory } from './components/AddCategory';
+import { GifGrid } from './components/GifGrid';
 
 export const GifExperApp = () => {
-  const [categories, setCategories] = useState<string[]>(['Inuyasha']);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  //Instead of passing the set function we pass this helper function so we know manage what happens to our state from here
+  const onNewCategory = (category: string) => {
+    // const lowerCaseCategory = category.toLowerCase();
+
+    if (
+      !categories.find((cat) => cat.toLowerCase() === category.toLowerCase())
+      /*  !categories
+        .map(
+          (cat) =>
+            cat.toLowerCase().trim() === lowerCaseCategory && lowerCaseCategory
+        )
+        .includes(lowerCaseCategory) */
+    ) {
+      setCategories((categories) => [category, ...categories]);
+    }
+  };
 
   return (
     <>
-      {/* titulo */}
       <h1>GifExperApp</h1>
-      {/* Input */}
-      <AddCategory setCategories={setCategories} />
-      {/* Listado de Gif */}
-      <ol>
-        {categories.map((category) => (
-          <li key={category}> {category} </li>
-        ))}
-      </ol>
-      {/* Gif Item */}
+
+      <AddCategory onNewCategory={onNewCategory} />
+
+      {categories.map((category) => (
+        <GifGrid key={category} category={category} />
+      ))}
     </>
   );
 };

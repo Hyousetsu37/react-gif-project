@@ -1,32 +1,24 @@
 import { useState } from 'react';
 
-interface InputProps {
-  setCategories: React.Dispatch<React.SetStateAction<string[]>>;
-}
+type InputProps = {
+  onNewCategory: (category: string) => void;
+};
 
-export const AddCategory = ({ setCategories }: InputProps) => {
-  const [inputValue, setInputValue] = useState('');
+export const AddCategory = ({ onNewCategory }: InputProps) => {
+  const [inputValue, setInputValue] = useState<string>('');
 
   const onInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(target.value);
-    console.log(inputValue);
   };
 
   const onSubmitting = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setCategories((categories) =>
-      inputValue.trim().length >= 1 && !categories.includes(inputValue)
-        ? [inputValue, ...categories]
-        : [...categories]
-    );
+    const newValue = inputValue.trim();
+    if (newValue.length >= 1) {
+      onNewCategory(newValue);
+    }
     setInputValue('');
   };
-  /*   const onSubmitting = (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!categories.includes(inputValue)) {
-      setCategories((categories) => [...categories, inputValue]);
-    }
-  }; */
 
   return (
     <form onSubmit={onSubmitting}>
